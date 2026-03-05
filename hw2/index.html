@@ -48,7 +48,7 @@
 		-->
 
 			<h2>Overview</h2>
-			In this homework, I implemented de Casteljau subdivision for Bezier curves and Bezier surfaces, area-weighted vertex normals in a half-edge mesh, edge flip and edge split operations, and loop subdivision for mesh upsampling. The most important takeaway was that local mesh operations are extremely sensitive to pointer consistency: even a single incorrect next/twin/face/edge assignment can produce holes or crashes. Drawing local neighborhoods and labeling halfedges was the most effective way to reason about correctness.
+			In this homework, I implemented de Casteljau subdivision for Bezier curves and Bezier surfaces, area-weighted vertex normals in a half-edge mesh, edge flip and edge split operations, and loop subdivision for mesh upsampling. The most important takeaway was that local mesh operations are extremely sensitive to pointer consistency: even a single incorrect next/twin/face/edge assignment can produce holes or crashes. Drawing local neighborhoods and labeling halfedges was the most effective way to reason about correctness. Overall, this assignment helped me better understand how geometric algorithms rely on local connectivity and how subtle pointer errors in half-edge structures can easily break mesh operations!
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
