@@ -39,7 +39,7 @@
 			Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw2-meshedit-jaew">https://github.com/cal-cs184-student/hw2-meshedit-jaew</a>
 
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_upsample2.png" alt="Teapot upsampled" style="width:50%"/>
+				<img src="sec2_part6_upsample2.png" alt="Teapot upsampled" style="width:50%"/>
 				<figcaption>Teapot after loop subdivision.</figcaption>
 			</figure>
 
@@ -63,37 +63,37 @@
 				<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				  <tr>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_1.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_1.png" width="400px"/>
 					  <figcaption>Original curve.</figcaption>
 					</td>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_2.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_2.png" width="400px"/>
 					  <figcaption>First interpolation step.</figcaption>
 					</td>
 				  </tr>
 				  <tr>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_3.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_3.png" width="400px"/>
 					  <figcaption>Second interpolation step.</figcaption>
 					</td>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_4.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_4.png" width="400px"/>
 					  <figcaption>Third interpolation step.</figcaption>
 					</td>
 				  </tr>
 				  <tr>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_5.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_5.png" width="400px"/>
 					  <figcaption>Fourth interpolation step.</figcaption>
 					</td>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_6.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_6.png" width="400px"/>
 					  <figcaption>Fifth interpolation step.</figcaption>
 					</td>
 				  </tr>
 				  <tr>
 					<td style="text-align: center;">
-					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_complete.png" width="400px"/>
+					  <img src="sec1_part1_mycurve_complete.png" width="400px"/>
 					  <figcaption>Final curve.</figcaption>
 					</td>
 				  </tr>
@@ -101,31 +101,31 @@
 			</div>
 			<p>Different Bezier curve, intermediate steps:</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_1.png" alt="Modified original curve" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_1.png" alt="Modified original curve" style="width:60%"/>
 				<figcaption>Modified curve: original curve.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_2.png" alt="Modified first step" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_2.png" alt="Modified first step" style="width:60%"/>
 				<figcaption>Modified curve: first interpolation step.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_3.png" alt="Modified second step" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_3.png" alt="Modified second step" style="width:60%"/>
 				<figcaption>Modified curve: second interpolation step.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_4.png" alt="Modified third step" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_4.png" alt="Modified third step" style="width:60%"/>
 				<figcaption>Modified curve: third interpolation step.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_5.png" alt="Modified fourth step" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_5.png" alt="Modified fourth step" style="width:60%"/>
 				<figcaption>Modified curve: fourth interpolation step.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_6.png" alt="Modified fifth step" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_6.png" alt="Modified fifth step" style="width:60%"/>
 				<figcaption>Modified curve: fifth interpolation step.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_complete.png" alt="Modified final curve" style="width:60%"/>
+				<img src="sec1_part1_modifiedcurve_complete.png" alt="Modified final curve" style="width:60%"/>
 				<figcaption>Modified curve: final curve.</figcaption>
 			</figure>
 
@@ -135,7 +135,7 @@
 			<p><b>How I implemented it:</b><br>
 			I first implemented <code>BezierPatch::evaluateStep</code>, which performs one layer of linear interpolation between adjacent control points in 3D. Then <code>BezierPatch::evaluate1D</code> repeatedly calls evaluateStep until only one point remains, fully evaluating a Bezier curve at a given parameter. Finally, in <code>BezierPatch::evaluate</code>, I evaluate each row of the control point grid at parameter u to obtain intermediate points, and then evaluate those points at parameter v to compute the final point on the Bezier surface.</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec1_part2_teapot.png" alt="teapot.bez" style="width:60%"/>
+				<img src="sec1_part2_teapot.png" alt="teapot.bez" style="width:60%"/>
 				<figcaption>Bezier surface evaluation on <code>teapot.bez</code>.</figcaption>
 			</figure>
 
@@ -145,11 +145,11 @@
 			<p><b>How I implemented area weighted vertex normals:</b><br>
 			Area-weighted vertex normals are computed by averaging the normals of all faces incident to a vertex, where each face normal is weighted by the area of the face. Using the half-edge data structure, I start from a halfedge associated with the vertex and iterate around all neighboring faces by repeatedly following the twin() and next() pointers. This allows me to visit every triangle that shares the vertex. At each triangle, I compute two edge vectors and take their cross product. The cross product produces a vector perpendicular to the triangle’s surface, and its magnitude is proportional to the area of the triangle. I add these vectors together for all incident faces, then normalize the result to obtain a unit-length vertex normal.</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part3_default.png" alt="Default shading" style="width:60%"/>
+				<img src="sec2_part3_default.png" alt="Default shading" style="width:60%"/>
 				<figcaption>Default shading.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part3_shading.png" alt="Phong shading" style="width:60%"/>
+				<img src="sec2_part3_shading.png" alt="Phong shading" style="width:60%"/>
 				<figcaption>Phong shading with area-weighted normals.</figcaption>
 			</figure>
 
@@ -159,11 +159,11 @@
 			<p><b>Debugging:</b><br>
 			The most helpful trick was drawing the two triangles and labeling all six halfedges before and after the flip. This made it easier to reason about which pointers needed to change. I also made sure to explicitly set all pointers for the affected halfedges instead of only the ones I thought were changing, since missing even a single pointer can lead to broken connectivity or holes.</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part4_default.png" alt="Teapot before edge flips" style="width:60%"/>
+				<img src="sec2_part4_default.png" alt="Teapot before edge flips" style="width:60%"/>
 				<figcaption>Before edge flips.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part4_flips.png" alt="Teapot after edge flips" style="width:60%"/>
+				<img src="sec2_part4_flips.png" alt="Teapot after edge flips" style="width:60%"/>
 				<figcaption>After edge flips.</figcaption>
 			</figure>
 
@@ -173,15 +173,15 @@
 			<p><b>Debugging:</b><br>
 			Similar to Part 4, drawing and labeling every local halfedge before and after the split was the most helpful approach. I also repeatedly split edges, flipped nearby edges, and alternated split/flip operations to ensure the mesh stayed valid without cracks or crashes.</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part5_default.png" alt="Mesh before operations" style="width:60%"/>
+				<img src="sec2_part5_default.png" alt="Mesh before operations" style="width:60%"/>
 				<figcaption>Before edge splits and flips.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part5_edgesplits.png" alt="Mesh after edge splits" style="width:60%"/>
+				<img src="sec2_part5_edgesplits.png" alt="Mesh after edge splits" style="width:60%"/>
 				<figcaption>After edge splits.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part5_splits_and_flips.png" alt="Mesh after splits and flips" style="width:60%"/>
+				<img src="sec2_part5_splits_and_flips.png" alt="Mesh after splits and flips" style="width:60%"/>
 				<figcaption>After edge splits and flips.</figcaption>
 			</figure>
 
@@ -191,37 +191,37 @@
 			<p><b>Debugging:</b><br>
 			The main nuance was storing a list of original edges before splitting, which prevents newly created edges from being split again in the same iteration. I also repeatedly applied subdivision and checked for holes, broken connectivity, and incorrect flips.</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_default.png" alt="Teapot without upsampling" style="width:60%"/>
+				<img src="sec2_part6_default.png" alt="Teapot without upsampling" style="width:60%"/>
 				<figcaption>Teapot without upsampling.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_upsample1.png" alt="Teapot with one upsampling" style="width:60%"/>
+				<img src="sec2_part6_upsample1.png" alt="Teapot with one upsampling" style="width:60%"/>
 				<figcaption>Teapot upsampled once.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_upsample2.png" alt="Teapot with two upsamplings" style="width:60%"/>
+				<img src="sec2_part6_upsample2.png" alt="Teapot with two upsamplings" style="width:60%"/>
 				<figcaption>Teapot upsampled twice.</figcaption>
 			</figure>
 			<p><b>How meshes behave after subdivision:</b><br>
 			After applying loop subdivision several times, the mesh becomes smoother and the number of triangles increases significantly. Sharp edges and corners gradually become rounded because vertex positions move toward weighted averages of neighboring vertices. One way to reduce this effect is by pre-splitting edges near sharp features before subdivision.</p>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_original.png" alt="Cube original" style="width:60%"/>
+				<img src="sec2_part6_cube_original.png" alt="Cube original" style="width:60%"/>
 				<figcaption>Cube original.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_upsample3.png" alt="Cube upsampled 3 times" style="width:60%"/>
+				<img src="sec2_part6_cube_upsample3.png" alt="Cube upsampled 3 times" style="width:60%"/>
 				<figcaption>Cube upsampled 3 times.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_upsample5.png" alt="Cube upsampled 5 times" style="width:60%"/>
+				<img src="sec2_part6_cube_upsample5.png" alt="Cube upsampled 5 times" style="width:60%"/>
 				<figcaption>Cube upsampled 5 times.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_nopreprocessed.png" alt="Cube with no preprocessing" style="width:60%"/>
+				<img src="sec2_part6_cube_nopreprocessed.png" alt="Cube with no preprocessing" style="width:60%"/>
 				<figcaption>Cube with no preprocessing.</figcaption>
 			</figure>
 			<figure>
-				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_preprocessed.png" alt="Cube with preprocessing" style="width:60%"/>
+				<img src="sec2_part6_cube_preprocessed.png" alt="Cube with preprocessing" style="width:60%"/>
 				<figcaption>Cube with preprocessing.</figcaption>
 			</figure>
 			<p><b>How pre-processing helps alleviate asymmetries:</b><br>
