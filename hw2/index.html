@@ -27,90 +27,206 @@
 	</head>
 	<body>
 		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 2 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+			<h1>CS184/284A Spring 2025 Homework 2 Write-Up</h1>
+			<div style="text-align: center;">Names: Jaewon Chang</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+			Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-0315jaewon/">https://cal-cs184-student.github.io/hw-webpages-0315jaewon/</a>
 
 		<br>
 		
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+			Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw2-meshedit-jaew">https://github.com/cal-cs184-student/hw2-meshedit-jaew</a>
 
-		<figure>
-			<img src="teapot.png" alt="Teapot" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
-		</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_upsample2.png" alt="Teapot upsampled" style="width:50%"/>
+				<figcaption>Teapot after loop subdivision.</figcaption>
+			</figure>
 
 		<!--
 		We've already added one heading per part, to make your write-up as navigable when grading. Please fit your write-up within these sections!
 		-->
 
-		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+			<h2>Overview</h2>
+			In this homework, I implemented de Casteljau subdivision for Bezier curves and Bezier surfaces, area-weighted vertex normals in a half-edge mesh, edge flip and edge split operations, and loop subdivision for mesh upsampling. The most important takeaway was that local mesh operations are extremely sensitive to pointer consistency: even a single incorrect next/twin/face/edge assignment can produce holes or crashes. Drawing local neighborhoods and labeling halfedges was the most effective way to reason about correctness.
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
-		<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
+			<p><b>What is de Casteljau’s algorithm:</b><br>
+			De casteljau’s algorithm evaluates a Bezier curve at a given parameter t, where t is between 0 and 1, by repeatedly interpolating adjacent points together. Starting from n original points, the algorithm interpolates the first and second point, second and third point, and so on until the last point. This process reduces the total number of points by 1. The algorithm then repeats on the new set of points, until we arrive at a final point. This point is the point of the Bezier curve at a specific parameter t. Note that t is a parameter that represents the weight of one point over another (i.e. a t value of 0.5 would be equivalent to interpolating two points by finding their midpoint, and a t value of 0.1 would mean finding a point that divides the line segment between the two points into a 1:9 ratio for instance).</p>
+			<p><b>How I implemented de Casteljau’s algorithm:</b><br>
+			In <code>BezierCurve::evaluateStep</code>, I compute just one subdivision level. For each adjacent pair of points <code>points[i]</code> and <code>points[i + 1]</code>, I compute the interpolated point <code>(1 - t) * points[i] + t * points[i + 1]</code> and add it to a vector. This function is repeatedly called when I press “E”, which makes it ultimately produce a single evaluated point on the Bezier curve.</p>
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
-		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="teapot.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			</table>
-		</div>
+			<p>Original curve, subdivision steps, and final Bezier curve:</p>
+			<div style="display: flex; flex-direction: column; align-items: center;">
+				<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_1.png" width="400px"/>
+					  <figcaption>Original curve.</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_2.png" width="400px"/>
+					  <figcaption>First interpolation step.</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_3.png" width="400px"/>
+					  <figcaption>Second interpolation step.</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_4.png" width="400px"/>
+					  <figcaption>Third interpolation step.</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_5.png" width="400px"/>
+					  <figcaption>Fourth interpolation step.</figcaption>
+					</td>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_6.png" width="400px"/>
+					  <figcaption>Fifth interpolation step.</figcaption>
+					</td>
+				  </tr>
+				  <tr>
+					<td style="text-align: center;">
+					  <img src="../../hw2-meshedit-jaew/images/sec1_part1_mycurve_complete.png" width="400px"/>
+					  <figcaption>Final curve.</figcaption>
+					</td>
+				  </tr>
+				</table>
+			</div>
+			<p>Different Bezier curve, intermediate steps:</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_1.png" alt="Modified original curve" style="width:60%"/>
+				<figcaption>Modified curve: original curve.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_2.png" alt="Modified first step" style="width:60%"/>
+				<figcaption>Modified curve: first interpolation step.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_3.png" alt="Modified second step" style="width:60%"/>
+				<figcaption>Modified curve: second interpolation step.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_4.png" alt="Modified third step" style="width:60%"/>
+				<figcaption>Modified curve: third interpolation step.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_5.png" alt="Modified fourth step" style="width:60%"/>
+				<figcaption>Modified curve: fourth interpolation step.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_6.png" alt="Modified fifth step" style="width:60%"/>
+				<figcaption>Modified curve: fifth interpolation step.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part1_modifiedcurve_complete.png" alt="Modified final curve" style="width:60%"/>
+				<figcaption>Modified curve: final curve.</figcaption>
+			</figure>
 
-		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
+			<p><b>How de Casteljau algorithm extends to Bezier surfaces:</b><br>
+			The de Casteljau algorithm can be extended from Bezier curves to Bezier surfaces by applying the same 1D interpolation process two times, in two different directions. A Bezier surface is defined by an n by n grid of control points and two parameters u and v, each ranging from 0 to 1. Each row of control points is treated as a Bezier curve parameterized by u. Using the same recursive interpolation step from Part 1, de Casteljau’s algorithm is applied to each row to compute a single intermediate point for that row. This results in n points that lie along a column of the surface. Next, these n intermediate points are treated as the control points of another Bezier curve, this time parameterized by v. Applying de Casteljau’s algorithm again to these points produces a final single point, which lies on the Bezier surface at the parameter (u,v).</p>
+			<p><b>How I implemented it:</b><br>
+			I first implemented <code>BezierPatch::evaluateStep</code>, which performs one layer of linear interpolation between adjacent control points in 3D. Then <code>BezierPatch::evaluate1D</code> repeatedly calls evaluateStep until only one point remains, fully evaluating a Bezier curve at a given parameter. Finally, in <code>BezierPatch::evaluate</code>, I evaluate each row of the control point grid at parameter u to obtain intermediate points, and then evaluate those points at parameter v to compute the final point on the Bezier surface.</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec1_part2_teapot.png" alt="teapot.bez" style="width:60%"/>
+				<figcaption>Bezier surface evaluation on <code>teapot.bez</code>.</figcaption>
+			</figure>
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
-		<h3>Part 3: Area-weighted vertex normals</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<h3>Part 3: Area-weighted vertex normals</h3>
+			<p><b>How I implemented area weighted vertex normals:</b><br>
+			Area-weighted vertex normals are computed by averaging the normals of all faces incident to a vertex, where each face normal is weighted by the area of the face. Using the half-edge data structure, I start from a halfedge associated with the vertex and iterate around all neighboring faces by repeatedly following the twin() and next() pointers. This allows me to visit every triangle that shares the vertex. At each triangle, I compute two edge vectors and take their cross product. The cross product produces a vector perpendicular to the triangle’s surface, and its magnitude is proportional to the area of the triangle. I add these vectors together for all incident faces, then normalize the result to obtain a unit-length vertex normal.</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part3_default.png" alt="Default shading" style="width:60%"/>
+				<figcaption>Default shading.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part3_shading.png" alt="Phong shading" style="width:60%"/>
+				<figcaption>Phong shading with area-weighted normals.</figcaption>
+			</figure>
 
-		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<h3>Part 4: Edge flip</h3>
+			<p><b>How I implemented the edge flip operation:</b><br>
+			An edge flip is an operation that replaces the shared edge between two adjacent triangles with the other diagonal of the quadrilateral formed by the four vertices of those triangles. If two triangles share edge (b,c), flipping that edge replaces it with edge (a,d), producing two new triangles while keeping the same four vertices. To implement this in the half-edge data structure, I first retrieved the halfedge of the selected edge and its twin, along with the other four halfedges that form the two neighboring triangles. If either adjacent face is a boundary face, I return since boundary edges should not be flipped. Otherwise, I reassign the connectivity of the six halfedges involved in the operation and update their next, vertex, face, and edge pointers so that the two faces are rewired correctly after the flip. I also update the halfedge pointers for the affected vertices, faces, and the flipped edge so that each element still points to a valid halfedge.</p>
+			<p><b>Debugging:</b><br>
+			The most helpful trick was drawing the two triangles and labeling all six halfedges before and after the flip. This made it easier to reason about which pointers needed to change. I also made sure to explicitly set all pointers for the affected halfedges instead of only the ones I thought were changing, since missing even a single pointer can lead to broken connectivity or holes.</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part4_default.png" alt="Teapot before edge flips" style="width:60%"/>
+				<figcaption>Before edge flips.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part4_flips.png" alt="Teapot after edge flips" style="width:60%"/>
+				<figcaption>After edge flips.</figcaption>
+			</figure>
 
-		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<h3>Part 5: Edge split</h3>
+			<p><b>How I implemented the edge split operation:</b><br>
+			An edge split takes two triangles sharing an interior edge (b,c), inserts a new vertex m at the midpoint of that edge, and re-triangulates the local neighborhood into four triangles by connecting m to the two opposite vertices a and d. In my implementation, I first grabbed the halfedge of the target edge and its twin, along with the other four halfedges that complete the two adjacent triangles. I ignored boundary edges by returning immediately if either adjacent face is boundary. Then, I created the new vertex m and set its position to the midpoint of the two endpoints of the original edge. Next I allocated the new edges, faces, and halfedges and rewired all local pointers. Finally, I set <code>m->halfedge()</code> to one of the halfedges on the original edge object after the split as required.</p>
+			<p><b>Debugging:</b><br>
+			Similar to Part 4, drawing and labeling every local halfedge before and after the split was the most helpful approach. I also repeatedly split edges, flipped nearby edges, and alternated split/flip operations to ensure the mesh stayed valid without cracks or crashes.</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part5_default.png" alt="Mesh before operations" style="width:60%"/>
+				<figcaption>Before edge splits and flips.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part5_edgesplits.png" alt="Mesh after edge splits" style="width:60%"/>
+				<figcaption>After edge splits.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part5_splits_and_flips.png" alt="Mesh after splits and flips" style="width:60%"/>
+				<figcaption>After edge splits and flips.</figcaption>
+			</figure>
 
-		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<h3>Part 6: Loop subdivision for mesh upsampling</h3>
+			<p><b>How I implemented loop subdivision:</b><br>
+			Loop subdivision upsamples a triangle mesh by subdividing each triangle into four smaller triangles and updating vertex positions using a weighted averaging rule. I first computed updated positions for all original vertices and stored them in <code>Vertex::newPosition</code>. I also computed positions for new edge vertices in <code>Edge::newPosition</code>. After that, I split every original edge and flipped any new edge connecting an old and new vertex to produce the correct subdivision pattern. Finally, I copied all <code>newPosition</code> values into final vertex positions.</p>
+			<p><b>Debugging:</b><br>
+			The main nuance was storing a list of original edges before splitting, which prevents newly created edges from being split again in the same iteration. I also repeatedly applied subdivision and checked for holes, broken connectivity, and incorrect flips.</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_default.png" alt="Teapot without upsampling" style="width:60%"/>
+				<figcaption>Teapot without upsampling.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_upsample1.png" alt="Teapot with one upsampling" style="width:60%"/>
+				<figcaption>Teapot upsampled once.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_upsample2.png" alt="Teapot with two upsamplings" style="width:60%"/>
+				<figcaption>Teapot upsampled twice.</figcaption>
+			</figure>
+			<p><b>How meshes behave after subdivision:</b><br>
+			After applying loop subdivision several times, the mesh becomes smoother and the number of triangles increases significantly. Sharp edges and corners gradually become rounded because vertex positions move toward weighted averages of neighboring vertices. One way to reduce this effect is by pre-splitting edges near sharp features before subdivision.</p>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_original.png" alt="Cube original" style="width:60%"/>
+				<figcaption>Cube original.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_upsample3.png" alt="Cube upsampled 3 times" style="width:60%"/>
+				<figcaption>Cube upsampled 3 times.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_upsample5.png" alt="Cube upsampled 5 times" style="width:60%"/>
+				<figcaption>Cube upsampled 5 times.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_nopreprocessed.png" alt="Cube with no preprocessing" style="width:60%"/>
+				<figcaption>Cube with no preprocessing.</figcaption>
+			</figure>
+			<figure>
+				<img src="../../hw2-meshedit-jaew/images/sec2_part6_cube_preprocessed.png" alt="Cube with preprocessing" style="width:60%"/>
+				<figcaption>Cube with preprocessing.</figcaption>
+			</figure>
+			<p><b>How pre-processing helps alleviate asymmetries:</b><br>
+			When repeatedly applying loop subdivision to a cube, it becomes smoother and more rounded, but can also become slightly asymmetric. This happens because each square face is triangulated by a diagonal, and that orientation introduces directional bias that accumulates over repeated subdivision. I pre-processed by flipping edges so triangulation across faces is more symmetric. This distributes updates more evenly and yields a visibly more symmetric result after subdivision.</p>
 
-		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
 		</div>
 	</body>
 </html>
